@@ -1,0 +1,52 @@
+https://blog.csdn.net/boling_cavalry/article/details/85395080
+
+
+#创建kafka topic
+#partitions指定topic分区数
+#replication-factor指定topic每个分区的副本数，一般情况下等于broker的个数
+kafka-topics.sh --zookeeper zookeeper:2181 --create --topic test --partitions 12 --replication-factor 2
+
+
+
+docker exec kafka-docker_kafka_1 \
+kafka-topics.sh \
+--create --topic topic001 \
+--partitions 4 \
+--zookeeper zookeeper:2181 \
+--replication-factor 2
+
+
+#查看所有topic列表
+kafka-topics.sh --zookeeper zookeeper:2181 --list
+
+docker exec kafka-docker_kafka_3 \
+kafka-topics.sh --list \
+--zookeeper zookeeper:2181 \
+topic001
+
+#查看指定topic信息
+kafka-topics.sh --zookeeper zookeeper:2181 --describe --topic test
+
+#控制台向topic生产数据
+kafka-console-producer.sh \
+--topic test \
+--broker-list kafka-docker_kafka_1:9092,kafka-docker_kafka_2:9092
+
+docker exec -it kafka-docker_kafka_1 \
+kafka-console-producer.sh \
+--topic topic001 \
+--broker-list kafka-docker_kafka_1:9092,kafka-docker_kafka_2:9092,kafka-docker_kafka_3:9092,kafka-docker_kafka_4:9092
+
+
+
+#控制台消费topic的数据
+kafka-console-consumer.sh \
+--topic test \
+--bootstrap-server kafka-docker_kafka_1:9092,kafka-docker_kafka_2:9092
+
+
+
+docker exec kafka-docker_kafka_2 \
+kafka-console-consumer.sh \
+--topic topic001 \
+--bootstrap-server kafka-docker_kafka_1:9092,kafka-docker_kafka_2:9092,kafka-docker_kafka_3:9092,kafka-docker_kafka_4:9092
