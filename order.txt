@@ -1,6 +1,7 @@
 ﻿https://blog.csdn.net/boling_cavalry/article/details/85395080
 
 
+
 docker-compose scale kafka=4
 
 #创建kafka topic
